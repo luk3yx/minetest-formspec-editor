@@ -336,15 +336,16 @@ function elems.textlist(node)
     local res = make('div')
     for i, item in ipairs(node.listelem) do
         local elem = make('div')
-        if item == '' then
-            elem.innerHTML = '&nbsp;'
-        elseif item:sub(1, 1) ~= '#' then
+        if item:sub(1, 1) ~= '#' then
             elem.textContent = item
         elseif item:sub(2, 2) == '#' then
             elem.textContent = item:sub(2)
         else
             elem.style.color = item:sub(1, 7)
             elem.textContent = item:sub(8)
+        end
+        if elem.textContent == '' then
+            elem.innerHTML = '&nbsp;'
         end
         if i == node.selected_idx then
             elem.style.background = '#467832';
@@ -398,7 +399,8 @@ function renderer.render_ast(tree, callbacks, store_json, scale)
 
     for _, node in ipairs(formspec_ast.flatten(tree)) do
         if not elems[node.type] then
-            return nil, 'Unknown formspec element: ' .. node.type
+            return nil, 'Formspec element type ' .. node.type ..
+                ' not implemented.'
         end
         local e, ignore_pos = elems[node.type](node, base, callbacks == nil,
             scale)
@@ -476,11 +478,13 @@ end
 
 local element_dialog_base
 local function replace_formspec(elem, tree)
-    local new_elem = renderer.render_ast(tree)
+    local new_elem, err = renderer.render_ast(tree)
+    if not new_elem then return nil, err end
     elem:replaceWith(new_elem)
     if element_dialog_base == elem then
         element_dialog_base = new_elem
     end
+    return new_elem, nil
 end
 
 function renderer.redraw_formspec(elem)
@@ -653,8 +657,13 @@ local function show_load_save_dialog()
         local tree, err = renderer.import(fs, load_save_opts)
         if not tree then
             window:alert('Error loading formspec:\n' .. err)
+            return
         end
-        replace_formspec(element_dialog_base, tree)
+        local elem, err = replace_formspec(element_dialog_base, tree)
+        if not elem then
+            window:alert('Error loading formspec:\n' .. err)
+            return
+        end
         renderer.show_element_dialog(element_dialog_base)
     end
 
