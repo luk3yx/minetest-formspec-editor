@@ -336,7 +336,9 @@ function elems.textlist(node)
     local res = make('div')
     for i, item in ipairs(node.listelem) do
         local elem = make('div')
-        if item:sub(1, 1) ~= '#' then
+        if item == '' then
+            elem.innerHTML = '&nbsp;'
+        elseif item:sub(1, 1) ~= '#' then
             elem.textContent = item
         elseif item:sub(2, 2) == '#' then
             elem.textContent = item:sub(2)
