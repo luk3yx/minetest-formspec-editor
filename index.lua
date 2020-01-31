@@ -746,5 +746,4 @@ function window:make_image(...)
     return renderer.make_image(...)
 end
 
-window:render_formspec('formspec_version[2]size[8,9]label[0.5,1;Welcome to luk3yx\'s formspec editor!]button[0.5,2;7,1;name;Label]image_button[3,4;2,2;default_mese_crystal.png;name;Label;false;false;bad]field[0.5,6;7,1;field_name;Field label;]'
-    .. 'checkbox[0.5,8;checkbox;Yay label;true]textarea[5,5;3,3;name;Label;default]')
+window:render_formspec('formspec_version[2]size[10.5,11]')
