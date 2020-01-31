@@ -1,0 +1,3 @@
+[submodule "formspec_ast"]
+	path = formspec_ast
+	url = https://git.minetest.land/luk3yx/formspec_ast

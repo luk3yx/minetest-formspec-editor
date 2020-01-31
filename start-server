@@ -1,0 +1,9 @@
+#!/bin/bash
+#
+# Start both Python's http.server and sass for testing.
+#
+
+cd $(dirname "$0") || exit
+python3 -m http.server &
+trap "echo;kill -15 '$!'" EXIT
+scss --watch style.scss

@@ -1,0 +1,232 @@
+@import url('https://fonts.googleapis.com/css?family=Arimo&display=swap');
+
+// Web-based formspec editor stylesheets.
+//
+// © 2020 by luk3yx.
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+.formspec_ast-base {
+& > div {
+    position: absolute;
+    background-color: #343434;
+    border: 1px solid #0D0D0D;
+    border-radius: 3px;
+    overflow: hidden;
+
+    &, input, textarea {
+        font-family: Arimo, sans-serif;
+        color: #FFFFFF;
+    }
+
+    & > * {
+        position: absolute;
+        font-size: 0.34em;
+        display: block;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+        padding: 0;
+        text-shadow: 1px 1px black;
+    }
+}
+
+img {
+    -webkit-user-drag: none;
+    -moz-user-drag: none;
+    user-drag: none;
+}
+
+.formspec_ast-clickable {
+    &:active {
+        transform: translate(1px, 1px);
+    }
+}
+
+.formspec_ast-label {
+    margin-top: -0.6em;
+
+    &[data-text=""]::after {
+        content: "(empty label)";
+        font-style: italic;
+    }
+}
+
+// Make boxes partially visible
+.formspec_ast-box {
+    background-color: #f002;
+}
+
+
+.formspec_ast-button, .formspec_ast-button_exit,
+        .formspec_ast-image_button[data-drawborder="true"],
+        .formspec_ast-image_button_exit[data-drawborder="true"] {
+    box-sizing: border-box;
+    border: 1px solid #000;
+    background: #414141;
+    background: linear-gradient(180deg, #535353 0%, #2E2E2E 100%);
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+        background: linear-gradient(180deg, #656565 0%, #383838 100%);
+    }
+    &:active {
+        background: linear-gradient(180deg, #464646 0%, #272727 100%);
+    }
+}
+
+.formspec_ast-image_button, .formspec_ast-image_button_exit {
+    &[data-drawborder="false"] {
+        background: none;
+        border: none;
+    }
+    img {
+        width: 100%;
+        height: 100%;
+    }
+    span {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+}
+
+.formspec_ast-image, .formspec_ast-image_button img,
+        .formspec_ast-image_button_exit img {
+    image-rendering: optimizeSpeed;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+}
+
+.formspec_ast-field, .formspec_ast-textarea {
+    span {
+        position: absolute;
+        transform: translateY(-100%);
+    }
+    input, textarea {
+        width: 100%;
+        height: 100%;
+        padding-left: 2px;
+        padding-right: 2px;
+        box-sizing: border-box;
+        border: 1px solid #000;
+        background: #FFFFFF65;
+        color: white;
+        text-shadow: 1px 1px black;
+        font-size: 1em;
+
+        &::selection {
+            background: #608631;
+        }
+    }
+    textarea {
+        resize: none;
+    }
+}
+
+.formspec_ast-checkbox {
+    margin-top: -0.6em;
+    & > div {
+        width: 1.2em;
+        height: 1.2em;
+        margin-right: 0.3em;
+        box-sizing: border-box;
+        border: 1px solid #000;
+        background: #848484;
+        display: inline-block;
+        vertical-align: bottom;
+    }
+
+    &:active > div {
+        background-color: #608631;
+    }
+
+    &[data-checked="true"] > div::before {
+        position: absolute;
+        content: '✓';
+        width: 1.2em;
+        margin-top: -0.05em;
+        color: #000;
+        text-shadow: none;
+        text-align: center;
+    }
+}
+
+.formspec_ast-list {
+    font-size: inherit;
+    overflow: hidden;
+    border-collapse: collapse;
+    td {
+        width: 1em;
+        height: 1em;
+        background: #00000065;
+        padding: 0;
+        border: 0.25em solid #343434;
+        &:first-child {
+            border-left: 0;
+        }
+        &:last-child {
+            border-right: 0;
+        }
+        &:hover {
+            background-color: #FFFFFF30;
+        }
+    }
+    tr:first-child td {
+        border-top: 0;
+    }
+    tr:last-child td {
+        border-bottom: 0;
+    }
+}
+
+.formspec_ast-textlist {
+    border: 1px solid #1E1E1E;
+    background: #1E1E1E;
+    box-sizing: border-box;
+    white-space: pre;
+    font-size: 1em;
+
+    & > div {
+        font-size: 0.34em;
+        padding: 2px; // TODO: Use em
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+}
+
+}
+
+#formspec_ast-properties {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100%;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+#formspec_ast-new {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    overflow-y: auto;
+    padding: 10px;
+}

@@ -1,0 +1,157 @@
+@charset "UTF-8";
+@import url("https://fonts.googleapis.com/css?family=Arimo&display=swap");
+.formspec_ast-base > div {
+  position: absolute;
+  background-color: #343434;
+  border: 1px solid #0D0D0D;
+  border-radius: 3px;
+  overflow: hidden; }
+  .formspec_ast-base > div, .formspec_ast-base > div input, .formspec_ast-base > div textarea {
+    font-family: Arimo, sans-serif;
+    color: #FFFFFF; }
+  .formspec_ast-base > div > * {
+    position: absolute;
+    font-size: 0.34em;
+    display: block;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    padding: 0;
+    text-shadow: 1px 1px black; }
+.formspec_ast-base img {
+  -webkit-user-drag: none;
+  -moz-user-drag: none;
+  user-drag: none; }
+.formspec_ast-base .formspec_ast-clickable:active {
+  transform: translate(1px, 1px); }
+.formspec_ast-base .formspec_ast-label {
+  margin-top: -0.6em; }
+  .formspec_ast-base .formspec_ast-label[data-text=""]::after {
+    content: "(empty label)";
+    font-style: italic; }
+.formspec_ast-base .formspec_ast-box {
+  background-color: #f002; }
+.formspec_ast-base .formspec_ast-button, .formspec_ast-base .formspec_ast-button_exit,
+.formspec_ast-base .formspec_ast-image_button[data-drawborder="true"],
+.formspec_ast-base .formspec_ast-image_button_exit[data-drawborder="true"] {
+  box-sizing: border-box;
+  border: 1px solid #000;
+  background: #414141;
+  background: linear-gradient(180deg, #535353 0%, #2E2E2E 100%);
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center; }
+  .formspec_ast-base .formspec_ast-button:hover, .formspec_ast-base .formspec_ast-button_exit:hover,
+  .formspec_ast-base .formspec_ast-image_button[data-drawborder="true"]:hover,
+  .formspec_ast-base .formspec_ast-image_button_exit[data-drawborder="true"]:hover {
+    background: linear-gradient(180deg, #656565 0%, #383838 100%); }
+  .formspec_ast-base .formspec_ast-button:active, .formspec_ast-base .formspec_ast-button_exit:active,
+  .formspec_ast-base .formspec_ast-image_button[data-drawborder="true"]:active,
+  .formspec_ast-base .formspec_ast-image_button_exit[data-drawborder="true"]:active {
+    background: linear-gradient(180deg, #464646 0%, #272727 100%); }
+.formspec_ast-base .formspec_ast-image_button[data-drawborder="false"], .formspec_ast-base .formspec_ast-image_button_exit[data-drawborder="false"] {
+  background: none;
+  border: none; }
+.formspec_ast-base .formspec_ast-image_button img, .formspec_ast-base .formspec_ast-image_button_exit img {
+  width: 100%;
+  height: 100%; }
+.formspec_ast-base .formspec_ast-image_button span, .formspec_ast-base .formspec_ast-image_button_exit span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); }
+.formspec_ast-base .formspec_ast-image, .formspec_ast-base .formspec_ast-image_button img,
+.formspec_ast-base .formspec_ast-image_button_exit img {
+  image-rendering: optimizeSpeed;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated; }
+.formspec_ast-base .formspec_ast-field span, .formspec_ast-base .formspec_ast-textarea span {
+  position: absolute;
+  transform: translateY(-100%); }
+.formspec_ast-base .formspec_ast-field input, .formspec_ast-base .formspec_ast-field textarea, .formspec_ast-base .formspec_ast-textarea input, .formspec_ast-base .formspec_ast-textarea textarea {
+  width: 100%;
+  height: 100%;
+  padding-left: 2px;
+  padding-right: 2px;
+  box-sizing: border-box;
+  border: 1px solid #000;
+  background: #FFFFFF65;
+  color: white;
+  text-shadow: 1px 1px black;
+  font-size: 1em; }
+  .formspec_ast-base .formspec_ast-field input::selection, .formspec_ast-base .formspec_ast-field textarea::selection, .formspec_ast-base .formspec_ast-textarea input::selection, .formspec_ast-base .formspec_ast-textarea textarea::selection {
+    background: #608631; }
+.formspec_ast-base .formspec_ast-field textarea, .formspec_ast-base .formspec_ast-textarea textarea {
+  resize: none; }
+.formspec_ast-base .formspec_ast-checkbox {
+  margin-top: -0.6em; }
+  .formspec_ast-base .formspec_ast-checkbox > div {
+    width: 1.2em;
+    height: 1.2em;
+    margin-right: 0.3em;
+    box-sizing: border-box;
+    border: 1px solid #000;
+    background: #848484;
+    display: inline-block;
+    vertical-align: bottom; }
+  .formspec_ast-base .formspec_ast-checkbox:active > div {
+    background-color: #608631; }
+  .formspec_ast-base .formspec_ast-checkbox[data-checked="true"] > div::before {
+    position: absolute;
+    content: '✓';
+    width: 1.2em;
+    margin-top: -0.05em;
+    color: #000;
+    text-shadow: none;
+    text-align: center; }
+.formspec_ast-base .formspec_ast-list {
+  font-size: inherit;
+  overflow: hidden;
+  border-collapse: collapse; }
+  .formspec_ast-base .formspec_ast-list td {
+    width: 1em;
+    height: 1em;
+    background: #00000065;
+    padding: 0;
+    border: 0.25em solid #343434; }
+    .formspec_ast-base .formspec_ast-list td:first-child {
+      border-left: 0; }
+    .formspec_ast-base .formspec_ast-list td:last-child {
+      border-right: 0; }
+    .formspec_ast-base .formspec_ast-list td:hover {
+      background-color: #FFFFFF30; }
+  .formspec_ast-base .formspec_ast-list tr:first-child td {
+    border-top: 0; }
+  .formspec_ast-base .formspec_ast-list tr:last-child td {
+    border-bottom: 0; }
+.formspec_ast-base .formspec_ast-textlist {
+  border: 1px solid #1E1E1E;
+  background: #1E1E1E;
+  box-sizing: border-box;
+  white-space: pre;
+  font-size: 1em; }
+  .formspec_ast-base .formspec_ast-textlist > div {
+    font-size: 0.34em;
+    padding: 2px;
+    padding-left: 5px;
+    padding-right: 5px; }
+
+#formspec_ast-properties {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100%;
+  overflow-y: auto;
+  padding: 10px; }
+
+#formspec_ast-new {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  overflow-y: auto;
+  padding: 10px; }
+
+/*# sourceMappingURL=style.css.map */
