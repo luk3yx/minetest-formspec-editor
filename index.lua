@@ -717,11 +717,16 @@ end
 function window:render_formspec(fs, callbacks)
     local tree = assert(formspec_ast.parse(fs))
     local elem = assert(renderer.render_ast(tree, callbacks))
-    local e = assert(document:getElementById('formspec_output'))
+    local e = document:getElementById('formspec_output')
+    if not e or e == null then
+        window:addEventListener('load', function()
+            window:render_formspec(fs, callbacks)
+        end)
+        return
+    end
     e.innerHTML = ''
     e:appendChild(elem)
     renderer.show_element_dialog(elem)
-    return 'OK'
 end
 
 function window:copy_formspec()
