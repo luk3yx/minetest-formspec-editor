@@ -39,6 +39,7 @@
         user-select: none;
         padding: 0;
         text-shadow: 1px 1px black;
+        white-space: pre;
     }
 }
 
@@ -200,7 +201,8 @@ img {
     border: 1px solid #1E1E1E;
     background: #1E1E1E;
     box-sizing: border-box;
-    white-space: pre;
+    overflow-x: hidden;
+    overflow-y: auto;
     font-size: 1em;
 
     & > div {

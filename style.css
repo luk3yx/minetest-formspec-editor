@@ -17,7 +17,8 @@
     -moz-user-select: none;
     user-select: none;
     padding: 0;
-    text-shadow: 1px 1px black; }
+    text-shadow: 1px 1px black;
+    white-space: pre; }
 .formspec_ast-base img {
   -webkit-user-drag: none;
   -moz-user-drag: none;
@@ -130,7 +131,8 @@
   border: 1px solid #1E1E1E;
   background: #1E1E1E;
   box-sizing: border-box;
-  white-space: pre;
+  overflow-x: hidden;
+  overflow-y: auto;
   font-size: 1em; }
   .formspec_ast-base .formspec_ast-textlist > div {
     font-size: 0.34em;
