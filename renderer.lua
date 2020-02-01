@@ -20,6 +20,7 @@
 -- Load formspec_ast
 FORMSPEC_AST_PATH = 'formspec_ast'
 dofile(FORMSPEC_AST_PATH .. '/init.lua')
+local formspec_escape = formspec_ast.formspec_escape
 
 -- Load fs51 to allow formspec_version[1] exports
 FS51_PATH = 'fs51'
@@ -373,7 +374,7 @@ function renderer.import(fs, opts)
     if opts.format then
         fs = fs:gsub('" %.%. minetest.formspec_escape%(tostring%(' ..
             '%-%-%[%[${%]%]([^}]*)%-%-%[%[}%]%]%)%) %.%. "', function(s)
-            return '${' .. ('%q'):format(s):sub(2, -2) .. '}'
+            return '${' .. ('%q'):format(formspec_escape(s)):sub(2, -2) .. '}'
         end)
         local err
         fs, err = deserialize(fs)
@@ -400,7 +401,7 @@ function renderer.export(tree, opts)
         fs = ('%q'):format(fs)
         local ok, msg = true, ''
         fs = fs:gsub('${([^}]*)}', function(code)
-            code = assert(deserialize('"' .. code .. '"'))
+            code = assert(deserialize('"' .. code .. '"')):gsub('\\(.)', '%1')
             if code:byte(1) == 0x1b then
                 ok, msg = false, 'Bytecode not permitted in format strings'
             elseif ok then
