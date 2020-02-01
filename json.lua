@@ -57,8 +57,8 @@ end
 
 -- Alias for JSON:parse so pcall can call it.
 local function raw_parse(json, nullvalue)
-    local json = JSON:parse(json)
-    return object_to_table(json, nullvalue)
+    local obj = JSON:parse(json)
+    return object_to_table(obj, nullvalue)
 end
 
 function json.loads(json, nullvalue)
