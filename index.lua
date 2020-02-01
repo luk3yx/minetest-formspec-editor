@@ -264,11 +264,11 @@ function elems.image_button(node)
 end
 elems.image_button_exit = elems.image_button
 
-function elems.field(node, base, default_callbacks)
+local function make_field(input_type, node, base, default_callbacks)
     local res = make('div')
     res:appendChild(make('span', {textContent = node.label}))
     local input = make('input', nil, {
-        type = 'text',
+        type = input_type,
         value = node.default or '',
     })
     if default_callbacks then
@@ -276,6 +276,14 @@ function elems.field(node, base, default_callbacks)
     end
     res:appendChild(input)
     return res
+end
+
+function elems.field(...)
+    return make_field('text', ...)
+end
+
+function elems.pwdfield(...)
+    return make_field('password', ...)
 end
 
 function elems.textarea(node, base, default_callbacks)
@@ -519,6 +527,7 @@ do
         image_button_exit[0,0;2,2;;;]
         label[0,0.2;]
         list[current_player;main;0,0;8,4;0]
+        pwdfield[0,0;3,0.75;;]
         textarea[0,0;3,2;;;]
         textlist[0,0;5,3;;;1;false]
     ]]))

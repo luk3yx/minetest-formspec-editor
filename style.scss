@@ -115,7 +115,7 @@ img {
     image-rendering: pixelated;
 }
 
-.formspec_ast-field, .formspec_ast-textarea {
+.formspec_ast-field, .formspec_ast-pwdfield, .formspec_ast-textarea {
     span {
         position: absolute;
         transform: translateY(-100%);

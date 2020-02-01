@@ -68,10 +68,10 @@
   image-rendering: -moz-crisp-edges;
   image-rendering: crisp-edges;
   image-rendering: pixelated; }
-.formspec_ast-base .formspec_ast-field span, .formspec_ast-base .formspec_ast-textarea span {
+.formspec_ast-base .formspec_ast-field span, .formspec_ast-base .formspec_ast-pwdfield span, .formspec_ast-base .formspec_ast-textarea span {
   position: absolute;
   transform: translateY(-100%); }
-.formspec_ast-base .formspec_ast-field input, .formspec_ast-base .formspec_ast-field textarea, .formspec_ast-base .formspec_ast-textarea input, .formspec_ast-base .formspec_ast-textarea textarea {
+.formspec_ast-base .formspec_ast-field input, .formspec_ast-base .formspec_ast-field textarea, .formspec_ast-base .formspec_ast-pwdfield input, .formspec_ast-base .formspec_ast-pwdfield textarea, .formspec_ast-base .formspec_ast-textarea input, .formspec_ast-base .formspec_ast-textarea textarea {
   width: 100%;
   height: 100%;
   padding-left: 2px;
@@ -82,9 +82,9 @@
   color: white;
   text-shadow: 1px 1px black;
   font-size: 1em; }
-  .formspec_ast-base .formspec_ast-field input::selection, .formspec_ast-base .formspec_ast-field textarea::selection, .formspec_ast-base .formspec_ast-textarea input::selection, .formspec_ast-base .formspec_ast-textarea textarea::selection {
+  .formspec_ast-base .formspec_ast-field input::selection, .formspec_ast-base .formspec_ast-field textarea::selection, .formspec_ast-base .formspec_ast-pwdfield input::selection, .formspec_ast-base .formspec_ast-pwdfield textarea::selection, .formspec_ast-base .formspec_ast-textarea input::selection, .formspec_ast-base .formspec_ast-textarea textarea::selection {
     background: #608631; }
-.formspec_ast-base .formspec_ast-field textarea, .formspec_ast-base .formspec_ast-textarea textarea {
+.formspec_ast-base .formspec_ast-field textarea, .formspec_ast-base .formspec_ast-pwdfield textarea, .formspec_ast-base .formspec_ast-textarea textarea {
   resize: none; }
 .formspec_ast-base .formspec_ast-checkbox {
   margin-top: -0.6em; }
