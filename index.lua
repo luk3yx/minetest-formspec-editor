@@ -146,9 +146,6 @@ local function show_properties(elem, node)
         if js.global:confirm('Are you sure?') then
             elem.parentNode:removeChild(elem)
             properties_elem.innerHTML = ''
-            local base = elem.parentNode.parentNode
-            assert(base.className == 'formspec_ast-base')
-            renderer.redraw_formspec(base)
         end
     end
 
