@@ -233,13 +233,20 @@ function renderer.make_image(name, allow_empty)
     return img
 end
 
-function renderer.render_ast(tree, callbacks, store_json, scale)
-    scale = 50 * (scale or 1)
+local default_options = {}
+function renderer.render_ast(tree, callbacks, options)
+    options = options or default_options
+    local scale = 50 * (options.scale or 1)
+    local store_json = options.store_json or options.store_json == nil
     local base = document:createElement('div')
     base.className = 'formspec_ast-base'
+    base:setAttribute('data-render-options', json.dumps(options))
     base.style.fontSize = scale .. 'px'
     local container = document:createElement('div')
     base:appendChild(container)
+    if options.grid then
+        base.firstChild.className = 'grid'
+    end
 
     for _, node in ipairs(formspec_ast.flatten(tree)) do
         if not elems[node.type] then
@@ -320,15 +327,22 @@ function renderer.elem_to_ast(elem)
     return res
 end
 
-function renderer.replace_formspec(elem, tree)
-    local new_elem, err = renderer.render_ast(tree)
+function renderer.replace_formspec(elem, ...)
+    local new_elem, err = renderer.render_ast(...)
     if not new_elem then return nil, err end
     elem:replaceWith(new_elem)
     return new_elem, nil
 end
 
 function renderer.redraw_formspec(elem)
-    renderer.replace_formspec(elem, renderer.elem_to_ast(elem))
+    local tree = renderer.elem_to_ast(elem)
+    local options = elem:getAttribute('data-render-options')
+    if type(options) == 'string' then
+        options = json.loads(options)
+    else
+        options = nil
+    end
+    renderer.replace_formspec(elem, tree, nil, options)
 end
 
 function renderer.unrender_formspec(elem)

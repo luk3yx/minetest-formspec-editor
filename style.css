@@ -5,7 +5,13 @@
   background-color: #343434;
   border: 1px solid #0D0D0D;
   border-radius: 3px;
-  overflow: hidden; }
+  overflow: hidden;
+  image-rendering: optimizeSpeed;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated; }
+  .formspec_ast-base > div.grid {
+    background: url("grid.png"); }
   .formspec_ast-base > div, .formspec_ast-base > div input, .formspec_ast-base > div textarea {
     font-family: Arimo, sans-serif;
     color: #FFFFFF; }
@@ -62,12 +68,6 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%); }
-.formspec_ast-base .formspec_ast-image, .formspec_ast-base .formspec_ast-image_button img,
-.formspec_ast-base .formspec_ast-image_button_exit img {
-  image-rendering: optimizeSpeed;
-  image-rendering: -moz-crisp-edges;
-  image-rendering: crisp-edges;
-  image-rendering: pixelated; }
 .formspec_ast-base .formspec_ast-field span, .formspec_ast-base .formspec_ast-pwdfield span, .formspec_ast-base .formspec_ast-textarea span {
   position: absolute;
   transform: translateY(-100%); }

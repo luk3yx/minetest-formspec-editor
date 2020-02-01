@@ -24,6 +24,14 @@
     border: 1px solid #0D0D0D;
     border-radius: 3px;
     overflow: hidden;
+    image-rendering: optimizeSpeed;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+
+    &.grid {
+        background: url("grid.png");
+    }
 
     &, input, textarea {
         font-family: Arimo, sans-serif;
@@ -105,14 +113,6 @@ img {
         left: 50%;
         transform: translate(-50%, -50%);
     }
-}
-
-.formspec_ast-image, .formspec_ast-image_button img,
-        .formspec_ast-image_button_exit img {
-    image-rendering: optimizeSpeed;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: crisp-edges;
-    image-rendering: pixelated;
 }
 
 .formspec_ast-field, .formspec_ast-pwdfield, .formspec_ast-textarea {

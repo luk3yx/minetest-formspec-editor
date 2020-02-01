@@ -180,7 +180,7 @@ local function show_properties(elem, node)
         elem:setAttribute('data-formspec_ast', json.dumps(node))
         properties_elem.innerHTML = ''
         local base = elem.parentNode.parentNode
-        assert(base.className == 'formspec_ast-base')
+        assert(base.classList:contains('formspec_ast-base'))
         renderer.redraw_formspec(base)
     end
 
@@ -196,7 +196,8 @@ local function show_properties(elem, node)
         parent:appendChild(elem)
     end
 
-    local n = assert(renderer.render_formspec(formspec, callbacks, false))
+    local n = assert(renderer.render_formspec(formspec, callbacks,
+        {store_json = false}))
     properties_elem:appendChild(n)
 end
 renderer.default_callback = show_properties
@@ -251,8 +252,8 @@ end
 local element_dialog_base
 do
     local replace_formspec = renderer.replace_formspec
-    function renderer.replace_formspec(elem, tree)
-        local new_elem, err = replace_formspec(elem, tree)
+    function renderer.replace_formspec(elem, ...)
+        local new_elem, err = replace_formspec(elem, ...)
         if new_elem and element_dialog_base == elem then
             element_dialog_base = new_elem
         end
@@ -263,7 +264,7 @@ end
 local function render_into(base, formspec, callbacks)
     base.innerHTML = ''
     base:appendChild(assert(renderer.render_formspec(formspec, callbacks,
-        false)))
+        {store_json = false})))
 end
 
 local element_dialog
@@ -380,18 +381,28 @@ function renderer.show_element_dialog(base)
         end
     end
     y = y + 0.5
-    fs = fs .. 'button[0.25,' .. y .. ';5.5,0.75;load;Load / save formspec]'
+    fs = fs .. 'button[0.25,' .. y .. ';5.5,0.75;grid;Toggle grid]'
+    fs = fs .. 'button[0.25,' .. y + 1 .. ';5.5,0.75;load;Load / save formspec]'
+    function callbacks.grid()
+        local raw = element_dialog_base:getAttribute('data-render-options')
+        if raw == js.null then raw = '{}' end
+        local options = json.loads(raw)
+        options.grid = not options.grid
+        raw = assert(json.dumps(options))
+        element_dialog_base:setAttribute('data-render-options', raw)
+        renderer.redraw_formspec(element_dialog_base)
+    end
     callbacks.load = show_load_save_dialog
-    y = y + 1
+    y = y + 2
     fs = 'formspec_version[2]size[6,' .. y .. ']' .. fs
     element_dialog:appendChild(assert(renderer.render_formspec(fs, callbacks,
-        false)))
+        {store_json = false})))
 end
 
 -- A JS API for testing
-function window:render_formspec(fs, callbacks)
+function window:render_formspec(fs, callbacks, options)
     local tree = assert(formspec_ast.parse(fs))
-    local elem = assert(renderer.render_ast(tree, callbacks))
+    local elem = assert(renderer.render_ast(tree, callbacks, options))
     local e = document:getElementById('formspec_output')
     if not e or e == js.null then
         window:addEventListener('load', function()
