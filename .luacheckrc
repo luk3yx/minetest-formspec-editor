@@ -9,6 +9,6 @@ read_globals = {
             "safe_interpret", "safe_parse", "show_formspec", "unparse", "walk"}
     },
     fs51 = {
-        fields = {"backport", "backport_tree"}
+        fields = {"backport", "backport_string"}
     },
 }
