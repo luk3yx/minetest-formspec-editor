@@ -53,6 +53,18 @@ local function get_properties_list(list_name)
     end
     return res
 end
+
+local property_names = {
+    h = 'Height',
+    w = 'Width',
+    drawborder = 'Draw border',
+    listelem = 'Items',
+    selected_idx = 'Selected item',
+}
+local function get_property_name(n)
+    return property_names[n] or n:sub(1, 1):upper() .. n:sub(2):gsub('_', ' ')
+end
+
 local function show_properties(elem, node)
     if not properties_elem then
         properties_elem = document:createElement('div')
@@ -80,7 +92,7 @@ local function show_properties(elem, node)
             -- however the "reset" button works.
             local k = k
             formspec = formspec .. 'label[0.25,' .. y - 0.2 .. ';' ..
-                formspec_escape(k) .. ' (list)]'
+                formspec_escape(get_property_name(k)) .. ' (list)]'
             y = y + 0.1
             for i, item in ipairs(v) do
                 formspec = formspec .. 'label[0.4,' .. y + 0.3 .. ';•]' ..
@@ -117,8 +129,8 @@ local function show_properties(elem, node)
             y = y + 1.1
         end
         formspec = formspec .. ';' .. formspec_escape('prop_' .. k) .. ';' ..
-            formspec_escape(k .. ' (' .. value_type .. ')') .. ';' ..
-            formspec_escape(tostring(v)) .. ']'
+            formspec_escape(get_property_name(k) .. ' (' .. value_type .. ')')
+            .. ';' .. formspec_escape(tostring(v)) .. ']'
         ::continue::
     end
 
@@ -165,7 +177,9 @@ local function show_properties(elem, node)
                 if type(node[k]) == 'string' then
                     node[k] = elem.lastChild.value
                 elseif type(node[k]) == 'number' then
-                    node[k] = tonumber(elem.lastChild.value) or node[k]
+                    -- Allow commas to be used as decimal points.
+                    local raw = elem.lastChild.value:gsub(',', '.')
+                    node[k] = tonumber(raw) or node[k]
                 elseif type(node[k]) == 'boolean' then
                     node[k] = elem:getAttribute('data-checked') == 'true'
                 end
@@ -611,10 +625,15 @@ function renderer.export(tree, opts)
     return fs, nil
 end
 
+local function render_into(base, formspec, callbacks)
+    base.innerHTML = ''
+    base:appendChild(assert(renderer.render_formspec(formspec, callbacks,
+        false)))
+end
+
 local element_dialog
 local load_save_opts = {}
 local function show_load_save_dialog()
-    element_dialog.innerHTML = ''
     local callbacks = {}
     local fs = [[
         formspec_version[2]size[6,9.5]button[0,0;1,0.6;back;←]
@@ -651,9 +670,9 @@ local function show_load_save_dialog()
         renderer.show_element_dialog(element_dialog_base)
     end
 
-    function callbacks.load()
-        local fs = window:prompt('Paste formspec here')
-        get_options()
+    local function load()
+        local textarea = element_dialog.firstChild.firstChild.lastChild
+        local fs = textarea.lastChild.value
         local tree, err = renderer.import(fs, load_save_opts)
         if not tree then
             window:alert('Error loading formspec:\n' .. err)
@@ -665,6 +684,18 @@ local function show_load_save_dialog()
             return
         end
         renderer.show_element_dialog(element_dialog_base)
+    end
+
+    function callbacks.load()
+        get_options()
+        local fs = 'formspec_version[2]size[6,9.5]button[0,0;1,0.6;back;←]' ..
+            'label[1.25,0.3;Load formspec]' ..
+            'button[0.25,8.25;5.5,1;load;Load formspec]' ..
+            'textarea[0.25,1.25;5.5,6.75;formspec;Paste your formspec here.;]'
+        render_into(element_dialog, fs, {
+            back = show_load_save_dialog,
+            load = load
+        })
     end
 
     function callbacks.save()
@@ -682,14 +713,12 @@ local function show_load_save_dialog()
                 'Error exporting formspec!;' .. formspec_escape(err)
         end
         fs = fs .. ']'
-        element_dialog.innerHTML = ''
-        element_dialog:appendChild(assert(renderer.render_formspec(fs, {
+        render_into(element_dialog, fs, {
             back = show_load_save_dialog,
-        })))
+        })
     end
 
-    element_dialog:appendChild(assert(renderer.render_formspec(fs, callbacks,
-        false)))
+    render_into(element_dialog, fs, callbacks)
 end
 
 function renderer.show_element_dialog(base)
