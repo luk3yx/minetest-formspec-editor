@@ -181,7 +181,10 @@ local function show_properties(elem, node)
         properties_elem.innerHTML = ''
         local base = elem.parentNode.parentNode
         assert(base.classList:contains('formspec_ast-base'))
-        renderer.redraw_formspec(base)
+        local idx = window.Array.prototype.indexOf(elem.parentNode.children,
+            elem)
+        base = renderer.redraw_formspec(base)
+        show_properties(base.firstChild.children[idx])
     end
 
     function callbacks.send_to_back()

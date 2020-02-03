@@ -343,7 +343,7 @@ function renderer.redraw_formspec(elem)
     else
         options = nil
     end
-    renderer.replace_formspec(elem, tree, nil, options)
+    return renderer.replace_formspec(elem, tree, nil, options)
 end
 
 function renderer.unrender_formspec(elem)
