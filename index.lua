@@ -323,6 +323,9 @@ local function show_load_save_dialog()
             return
         end
         renderer.show_element_dialog(element_dialog_base)
+        if properties_elem then
+            properties_elem.innerHTML = ''
+        end
     end
 
     function callbacks.load()
