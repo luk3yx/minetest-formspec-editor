@@ -184,7 +184,11 @@ local function show_properties(elem, node)
         local idx = window.Array.prototype.indexOf(elem.parentNode.children,
             elem)
         base = renderer.redraw_formspec(base)
-        show_properties(base.firstChild.children[idx])
+        if node.type == 'size' then
+            renderer.add_element(base, 'size')
+        elseif idx >= 0 then
+            show_properties(base.firstChild.children[idx])
+        end
     end
 
     function callbacks.send_to_back()
