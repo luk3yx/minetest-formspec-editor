@@ -401,6 +401,9 @@ function renderer.show_element_dialog(base)
         raw = assert(json.dumps(options))
         element_dialog_base:setAttribute('data-render-options', raw)
         renderer.redraw_formspec(element_dialog_base)
+        if properties_elem then
+            properties_elem.innerHTML = ''
+        end
     end
     callbacks.load = show_load_save_dialog
     y = y + 2
