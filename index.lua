@@ -44,6 +44,7 @@ local property_names = {
     h = 'Height',
     w = 'Width',
     drawborder = 'Draw border',
+    item = 'Items',
     listelem = 'Items',
     selected_idx = 'Selected item',
 }
@@ -217,6 +218,7 @@ do
         button[0,0;3,0.75;;]
         button_exit[0,0;3,0.75;;]
         checkbox[0,0.2;;;false]
+        dropdown[0,0;5,0.75;;;1]
         field[0,0;3,0.75;;;]
         image[0,0;1,1;]
         image_button[0,0;2,2;;;;false;true;]

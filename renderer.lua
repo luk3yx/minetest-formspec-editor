@@ -204,6 +204,33 @@ function elems.textlist(node)
     return res
 end
 
+function elems.dropdown(node, base, default_callbacks, scale)
+    local res = make('div')
+    if not node.h then
+        res.style.width = (node.w * scale) .. 'px'
+        res.style.height = (2 * 15/13 * 0.35 * scale) .. 'px'
+    end
+    local select = make('select')
+    for i, item in ipairs(node.item) do
+        local e = make('option', {textContent = item}, {name = i})
+        if i == node.selected_idx then
+            e:setAttribute('selected', 'selected')
+        end
+        select:appendChild(e)
+    end
+    window:setTimeout(function()
+        if res.classList:contains('formspec_ast-clickable') then
+            select:setAttribute('disabled', 'disabled')
+        end
+    end, 0)
+    res:appendChild(select)
+
+    local btn = make('div')
+    btn:appendChild(make('div'))
+    res:appendChild(btn)
+    return res
+end
+
 -- Make images - This uses HDX to simplify things
 local image_baseurl = 'https://gitlab.com/VanessaE/hdx-128/raw/master/'
 function renderer.make_image(name, allow_empty)

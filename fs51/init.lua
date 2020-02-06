@@ -124,6 +124,12 @@ function fixers.list(elem, next_elem)
     elem.type = 'container'
 end
 
+-- Remove the "height" attribute on dropdowns.
+function fixers.dropdown(elem)
+    elem.h = nil
+    return default_fixer(elem)
+end
+
 --
 local pre_types = {size = true, position = true, anchor = true,
                    no_prepend = true}
