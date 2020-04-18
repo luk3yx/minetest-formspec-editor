@@ -37,6 +37,12 @@
   .formspec_ast-base .formspec_ast-label[data-text=""]::after {
     content: "(empty label)";
     font-style: italic; }
+.formspec_ast-base .formspec_ast-vertlabel {
+  margin-left: -0.3em;
+  line-height: 1; }
+  .formspec_ast-base .formspec_ast-vertlabel[data-text=""]::after {
+    content: "(\a e\am\ap\at\ay\a \al\a a\a b\a e\al\a)";
+    font-style: italic; }
 .formspec_ast-base .formspec_ast-box {
   background-color: #f002; }
 .formspec_ast-base .formspec_ast-button, .formspec_ast-base .formspec_ast-button_exit,
@@ -50,7 +56,8 @@
   text-align: center;
   display: flex;
   align-items: center;
-  justify-content: center; }
+  justify-content: center;
+  overflow: hidden; }
   .formspec_ast-base .formspec_ast-button:hover, .formspec_ast-base .formspec_ast-button_exit:hover,
   .formspec_ast-base .formspec_ast-image_button[data-drawborder="true"]:hover,
   .formspec_ast-base .formspec_ast-image_button_exit[data-drawborder="true"]:hover,
@@ -62,6 +69,7 @@
   .formspec_ast-base .formspec_ast-dropdown > div:active {
     background: linear-gradient(180deg, #464646 0%, #272727 100%); }
 .formspec_ast-base .formspec_ast-image_button[data-drawborder="false"], .formspec_ast-base .formspec_ast-image_button_exit[data-drawborder="false"] {
+  overflow: hidden;
   background: none;
   border: none; }
 .formspec_ast-base .formspec_ast-image_button img, .formspec_ast-base .formspec_ast-image_button_exit img {
@@ -90,6 +98,9 @@
     background: #608631; }
 .formspec_ast-base .formspec_ast-field textarea, .formspec_ast-base .formspec_ast-pwdfield textarea, .formspec_ast-base .formspec_ast-textarea textarea {
   resize: none; }
+.formspec_ast-base .formspec_ast-textarea[data-formspec_ast-name=""] textarea {
+  border-color: transparent;
+  background: transparent; }
 .formspec_ast-base .formspec_ast-checkbox {
   margin-top: -0.6em; }
   .formspec_ast-base .formspec_ast-checkbox > div {

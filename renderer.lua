@@ -70,6 +70,14 @@ function elems.label(node)
     })
 end
 
+function elems.vertlabel(node)
+    return make('span', {
+        textContent = node.label:gsub('', '\n'):sub(2, -2),
+    }, {
+        data_text = node.label,
+    })
+end
+
 function elems.button(node)
     return make('div', {
         textContent = node.label,
@@ -425,7 +433,7 @@ function renderer.export(tree, opts)
     local fs, err = formspec_ast.unparse(tree)
     if not fs then return nil, err end
     if opts.format then
-        fs = ('%q'):format(fs)
+        fs = ('%q'):format(fs):gsub('\\\n', '\\n')
         local ok, msg = true, ''
         fs = fs:gsub('${([^}]*)}', function(code)
             code = assert(deserialize('"' .. code .. '"')):gsub('\\(.)', '%1')

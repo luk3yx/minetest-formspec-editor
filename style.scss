@@ -73,6 +73,16 @@ img {
     }
 }
 
+.formspec_ast-vertlabel {
+    margin-left: -0.3em;
+    line-height: 1;
+
+    &[data-text=""]::after {
+        content: "(\a e\am\ap\at\ay\a \al\a a\a b\a e\al\a)";
+        font-style: italic;
+    }
+}
+
 // Make boxes partially visible
 .formspec_ast-box {
     background-color: #f002;
@@ -91,6 +101,7 @@ img {
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
 
     &:hover {
         background: linear-gradient(180deg, #656565 0%, #383838 100%);
@@ -102,6 +113,7 @@ img {
 
 .formspec_ast-image_button, .formspec_ast-image_button_exit {
     &[data-drawborder="false"] {
+        overflow: hidden;
         background: none;
         border: none;
     }
@@ -141,6 +153,11 @@ img {
     textarea {
         resize: none;
     }
+}
+
+.formspec_ast-textarea[data-formspec_ast-name=""] textarea {
+    border-color: transparent;
+    background: transparent;
 }
 
 .formspec_ast-checkbox {

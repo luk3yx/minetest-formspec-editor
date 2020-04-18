@@ -352,7 +352,7 @@ local function show_load_save_dialog()
         local res, err = renderer.export(tree, load_save_opts)
         element_dialog.innerHTML = ''
         local fs = 'formspec_version[2]size[6,9.5]button[0,0;1,0.6;back;←]' ..
-            'label[1.25,0.3;Save formspec]textarea[0.25,1.25;5.5,8;;'
+            'label[1.25,0.3;Save formspec]textarea[0.25,1.25;5.5,8;result;'
         if res then
             fs = fs ..
                 'Formspec exported successfully.;' .. formspec_escape(res)
