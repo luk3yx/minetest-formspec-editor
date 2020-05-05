@@ -177,6 +177,11 @@ local function show_properties(elem, node)
                 node[k][tonumber(name:sub(6, s - 1))] = e.lastChild.value
             end
         end
+
+        if node.type == 'image_button' and node.texture_name == '' then
+            node.texture_name = 'blank.png'
+        end
+
         node._transient = nil
         elem:setAttribute('data-formspec_ast', json.dumps(node))
         properties_elem.innerHTML = ''

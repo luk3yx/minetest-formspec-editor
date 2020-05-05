@@ -89,7 +89,9 @@ function elems.image_button(node)
     local res = make('div', nil, {
         data_drawborder = tostring(node.drawborder ~= false),
     })
-    res:appendChild(renderer.make_image(node.texture_name, true))
+    if node.texture_name ~= 'blank.png' then
+        res:appendChild(renderer.make_image(node.texture_name, true))
+    end
     res:appendChild(make('span', {textContent = node.label}))
     return res
 end
@@ -239,6 +241,20 @@ function elems.dropdown(node, base, default_callbacks, scale)
     return res
 end
 
+local function generic_render(node)
+    window.console:warn('Formspec element type ' .. node.type ..
+        ' not implemented.')
+    if node.x and node.y then
+        return renderer.make_image('unknown_object.png')
+    else
+        window.console:error('Formspec element type ' .. node.type ..
+            ' is not implemented and there is no reliable way to render it.')
+        local res = make('div')
+        res.style.display = 'none'
+        return res
+    end
+end
+
 -- Make images - This uses HDX to simplify things
 local image_baseurl = 'https://gitlab.com/VanessaE/hdx-128/raw/master/'
 function renderer.make_image(name, allow_empty)
@@ -285,12 +301,10 @@ function renderer.render_ast(tree, callbacks, options)
     end
 
     for _, node in ipairs(formspec_ast.flatten(tree)) do
-        if not elems[node.type] then
-            return nil, 'Formspec element type ' .. node.type ..
-                ' not implemented.'
-        end
-        local e, ignore_pos = elems[node.type](node, base, callbacks == nil,
-            scale)
+        -- Attempt to use a generic renderer
+        local render_func = elems[node.type] or generic_render
+
+        local e, ignore_pos = render_func(node, base, callbacks == nil, scale)
         if e then
             if node.x and node.y and not ignore_pos then
                 e.style.left = (node.x * scale) .. 'px'
