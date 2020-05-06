@@ -18,7 +18,7 @@
 --
 
 -- Load the renderer
-dofile('renderer.lua')
+dofile('renderer.lua?rev=1')
 local formspec_escape = formspec_ast.formspec_escape
 
 -- Show the properties list
