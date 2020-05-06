@@ -354,7 +354,7 @@ function renderer.elem_to_ast(elem)
     local w = tonumber(elem:getAttribute('data-w'))
     local h = tonumber(elem:getAttribute('data-h'))
     local res = {
-        formspec_version = 2,
+        formspec_version = 3,
         {
             type = 'size',
             w = w or 0,
