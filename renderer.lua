@@ -317,6 +317,7 @@ function renderer.render_ast(tree, callbacks, options)
             e.className = 'formspec_ast-element formspec_ast-' .. node.type
             if store_json or store_json == nil then
                 e:setAttribute('data-formspec_ast', json.dumps(node))
+                e:setAttribute('data-type', node.type)
             end
             if node.name then
                 e:setAttribute('data-formspec_ast-name', node.name)

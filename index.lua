@@ -40,6 +40,36 @@ local function get_properties_list(list_name)
     return res
 end
 
+local function get_properties_map(list_name)
+    local keys = {}
+    local values = {}
+    local elems = properties_elem.firstChild.firstChild.children
+    for i = 0, elems.length - 1 do
+        local elem = elems[i]
+        local name = elem:getAttribute('data-formspec_ast-name')
+        if type(name) == 'string' then
+            if name:sub(1, 5) == 'map1[' then
+                local s, e = name:find(']', nil, true)
+                local n = name:sub(e + 1)
+                if n == list_name then
+                    keys[tonumber(name:sub(6, s - 1))] = elem.lastChild.value
+                end
+            elseif name:sub(1, 5) == 'map2[' then
+                local s, e = name:find(']', nil, true)
+                local n = name:sub(e + 1)
+                if n == list_name then
+                    values[tonumber(name:sub(6, s - 1))] = elem.lastChild.value
+                end
+            end
+        end
+    end
+    local res = {}
+    for i, key in ipairs(keys) do
+        res[key] = assert(values[i])
+    end
+    return res
+end
+
 local property_names = {
     h = 'Height',
     w = 'Width',
@@ -47,9 +77,42 @@ local property_names = {
     item = 'Items',
     listelem = 'Items',
     selected_idx = 'Selected item',
+    props = 'Properties',
+    opt = 'Options',
 }
 local function get_property_name(n)
     return property_names[n] or n:sub(1, 1):upper() .. n:sub(2):gsub('_', ' ')
+end
+
+local function draw_elements_list(selected_element)
+    local formspec = 'label[0.25,0.5;Selected element]' ..
+                     'dropdown[0.25,1;5.5,0.75;selected_element;'
+    local selected = 0
+    local elems = selected_element.parentElement.children
+    local rendered_elems = 0
+    for i = 0, elems.length - 1 do
+        local elem = elems[i]
+        if elem:getAttribute('data-transient') == 'true' then
+            goto continue
+        end
+        if rendered_elems > 0 then
+            formspec = formspec .. ','
+        end
+        rendered_elems = rendered_elems + 1
+        formspec = formspec .. formspec_escape(elem:getAttribute('data-type'))
+        if elem == selected_element then
+            selected = rendered_elems
+        end
+        ::continue::
+    end
+    if selected == 0 then
+        selected = rendered_elems + 1
+        if rendered_elems > 0 then
+            formspec = formspec .. ','
+        end
+        formspec = formspec .. '(New element)'
+    end
+    return formspec .. ';' .. selected .. ']'
 end
 
 local function show_properties(elem, node)
@@ -66,14 +129,51 @@ local function show_properties(elem, node)
 
     -- Why not do this as a formspec?
     local callbacks = {}
-    local formspec = 'label[0.25,0.5;Properties for ' ..
-        formspec_escape(node.type) .. ']'
-    local y = 1.5
+    local formspec = draw_elements_list(elem) ..
+        'label[0.25,2.5;Properties for ' .. formspec_escape(node.type) .. ']'
+    local y = 3.5
     for k, v in pairs(node) do
         if k == 'type' or k == '_transient' then goto continue end
 
+        local k = k
         local value_type = type(v)
-        if value_type == 'table' then
+        if k == 'opt' or k == 'props' then
+            assert(value_type == 'table')
+            formspec = formspec .. 'label[0.25,' .. y - 0.2 .. ';' ..
+                formspec_escape(get_property_name(k)) .. ' (map)]'
+            y = y + 0.1
+            local i = 0
+            for prop, value in pairs(v) do
+                i = i + 1
+                formspec = formspec .. 'label[0.4,' .. y + 0.3 .. ';•]' ..
+                    'field[0.7,' .. y .. ';1.95,0.6;' ..
+                    formspec_escape('map1[' .. i .. ']' .. k) .. ';;' ..
+                    formspec_escape(tostring(prop)) .. ']' ..
+                    'label[2.7,' .. y + 0.3 .. ';=]' ..
+                    'field[2.95,' .. y .. ';2,0.6;' ..
+                    formspec_escape('map2[' .. i .. ']' .. k) .. ';;' ..
+                    formspec_escape(tostring(value)) .. ']' ..
+                    'button[5.15,' .. y .. ';0.6,0.6;' ..
+                    formspec_escape('map-' .. i .. ':' .. k) .. ';X]'
+                y = y + 0.8
+
+                local prop = prop
+                callbacks['map-' .. i .. ':' .. k] = function()
+                    node[k] = get_properties_map(k)
+                    node[k][prop] = nil
+                    show_properties(elem, node)
+                end
+            end
+            formspec = formspec .. 'button[0.25,' .. y .. ';5.5,0.6;' ..
+                formspec_escape('props+' .. k) .. ';Add item]'
+            callbacks['props+' .. k] = function()
+                node[k] = get_properties_map(k)
+                node[k][''] = ''
+                show_properties(elem, node)
+            end
+            y = y + 1.3
+            goto continue
+        elseif value_type == 'table' then
             -- This table generation code is bad, the entire properties
             -- formspec is redrawn when a table element is deleted/created,
             -- however the "reset" button works.
@@ -156,6 +256,7 @@ local function show_properties(elem, node)
 
     function callbacks.save()
         local elems = properties_elem.firstChild.firstChild.children
+        local keys = {}
         for i = 0, elems.length - 1 do
             local e = elems[i]
             local name = e:getAttribute('data-formspec_ast-name')
@@ -175,6 +276,19 @@ local function show_properties(elem, node)
                 local s = name:find(']', nil, true)
                 local k = name:sub(s + 1)
                 node[k][tonumber(name:sub(6, s - 1))] = e.lastChild.value
+            elseif prefix == 'map1[' then
+                local s = name:find(']', nil, true)
+                local k = name:sub(s + 1)
+                if not keys[k] then
+                    keys[k] = {}
+                    node[k] = {}
+                end
+                keys[k][tonumber(name:sub(6, s - 1))] = e.lastChild.value
+            elseif prefix == 'map2[' then
+                local s = name:find(']', nil, true)
+                local k = name:sub(s + 1)
+                local key = keys[k][tonumber(name:sub(6, s - 1))]
+                node[k][key] = e.lastChild.value
             end
         end
 
@@ -201,16 +315,32 @@ local function show_properties(elem, node)
         local parent = elem.parentNode
         parent:removeChild(elem)
         parent:prepend(elem)
+        show_properties(elem, node)
     end
 
     function callbacks.bring_to_front()
         local parent = elem.parentNode
         parent:removeChild(elem)
         parent:appendChild(elem)
+        show_properties(elem, node)
     end
 
     local n = assert(renderer.render_formspec(formspec, callbacks,
         {store_json = false}))
+
+    local elems = n.firstChild.children
+    for i = 0, elems.length - 1 do
+        local elem2 = elems[i]
+        local name = elem2:getAttribute('data-formspec_ast-name')
+        if name == 'selected_element' then
+            elem2:addEventListener('change', function()
+                local idx = elem2.firstChild.selectedIndex
+                show_properties(elem.parentElement.children[idx])
+            end)
+            break
+        end
+    end
+
     properties_elem:appendChild(n)
 end
 renderer.default_callback = show_properties
