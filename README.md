@@ -4,7 +4,7 @@ Really actually removing the pains of formspec design.
 
 [Git repository](https://git.minetest.land/luk3yx/formspec-editor)
 
-[Try it online](https://ca.xeroxirc.net/formspec-editor/)
+[Try it online](https://us.xeroxirc.net/formspec-editor/)
 
 Uses [Fengari](https://fengari.io/) to run my
 [formspec_ast](https://git.minetest.land/luk3yx/formspec_ast) and fs51 mods on
