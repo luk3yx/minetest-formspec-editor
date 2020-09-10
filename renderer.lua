@@ -444,7 +444,18 @@ end
 function renderer.export(tree, opts)
     if opts.use_v1 then
         tree = fs51.backport(tree)
+
+        -- Round numbers to 2 decimal places
+        local c = {'x', 'y', 'w', 'h'}
+        for node in formspec_ast.walk(tree) do
+            for _, k in ipairs(c) do
+                if type(node[k]) == 'number' then
+                    node[k] = math.floor((node[k] * 100) + 0.5) / 100
+                end
+            end
+        end
     end
+
     local fs, err = formspec_ast.unparse(tree)
     if not fs then return nil, err end
     if opts.format then
