@@ -74,7 +74,7 @@ fixers.item_image = fixers.image
 
 function fixers.button(elem)
     elem.type = 'image_' .. elem.type
-    elem.texture_name = ''
+    elem.texture_name = 'blank.png'
     return fixers.image_button(elem)
 end
 fixers.button_exit = fixers.button

@@ -441,19 +441,24 @@ function renderer.import(fs, opts)
     return tree, err
 end
 
-function renderer.export(tree, opts)
-    if opts.use_v1 then
-        tree = fs51.backport(tree)
+function renderer.fs51_backport(tree)
+    tree = fs51.backport(tree)
 
-        -- Round numbers to 2 decimal places
-        local c = {'x', 'y', 'w', 'h'}
-        for node in formspec_ast.walk(tree) do
-            for _, k in ipairs(c) do
-                if type(node[k]) == 'number' then
-                    node[k] = math.floor((node[k] * 100) + 0.5) / 100
-                end
+    -- Round numbers to 2 decimal places
+    local c = {'x', 'y', 'w', 'h'}
+    for node in formspec_ast.walk(tree) do
+        for _, k in ipairs(c) do
+            if type(node[k]) == 'number' then
+                node[k] = math.floor((node[k] * 100) + 0.5) / 100
             end
         end
+    end
+    return tree
+end
+
+function renderer.export(tree, opts)
+    if opts.use_v1 then
+        tree = renderer.fs51_backport(tree)
     end
 
     local fs, err = formspec_ast.unparse(tree)

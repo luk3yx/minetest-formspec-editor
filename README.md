@@ -22,6 +22,8 @@ default (dynamically loaded when required).
     if you plan to import them again.
  - The ability to load existing formspecs (provided they are version 2 or
      above).
+ - The ability to export to (but not import from) digistuff touchscreen
+    formspecs.
 
 ## Limitations
 
