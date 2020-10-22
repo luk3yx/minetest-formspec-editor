@@ -418,7 +418,7 @@ local load_save_opts = {}
 local function show_load_save_dialog()
     local callbacks = {}
     local formspec = [[
-        formspec_version[2]size[6,10.75]button[0,0;1,0.6;back;←]
+        formspec_version[2]size[6,11.25]button[0,0;1,0.6;back;←]
         label[1.25,0.3;Load / save formspec]
         checkbox[0.25,1.3;use_v1;Use formspec version 1;]] ..
             (load_save_opts.use_v1 and 'true' or 'false') .. [[]
@@ -433,7 +433,8 @@ local function show_load_save_dialog()
         label[0.75,5.8;handled automatically.]
         button[0.25,7;5.5,1;load;Load formspec]
         button[0.25,8.25;5.5,1;save;Save formspec]
-        button[0.25,9.5;5.5,1;digistuff_ts;WIP]] .. '\n' ..
+        box[0,9.619;6,0.02;#aaa]
+        button[0.25,10;5.5,1;digistuff_ts;WIP]] .. '\n' ..
             [[Export to digistuff touchscreen]
     ]]
     local function get_options()
@@ -485,7 +486,7 @@ local function show_load_save_dialog()
         })
     end
 
-    local function save_dialog(res, err)
+    local function save_dialog(name, res, err)
         element_dialog.innerHTML = ''
         local label, msg
         if res then
@@ -494,7 +495,7 @@ local function show_load_save_dialog()
             label, msg = 'Error exporting formspec!', err
         end
         local fs = 'formspec_version[2]size[6,9.5]button[0,0;1,0.6;back;←]' ..
-            'label[1.25,0.3;Save formspec]textarea[0.25,1.25;5.5,8;result;' ..
+            'label[1.25,0.3;' .. name .. ']textarea[0.25,1.25;5.5,8;result;' ..
             label .. ';' .. formspec_escape(msg) .. ']'
         render_into(element_dialog, fs, {
             back = show_load_save_dialog,
@@ -504,14 +505,14 @@ local function show_load_save_dialog()
     function callbacks.save()
         get_options()
         local tree = renderer.elem_to_ast(element_dialog_base)
-        save_dialog(renderer.export(tree, load_save_opts))
+        save_dialog('Save formspec', renderer.export(tree, load_save_opts))
     end
 
     function callbacks.digistuff_ts()
         get_options()
         local tree = renderer.elem_to_ast(element_dialog_base)
         local f = load_save_opts.use_v1 and renderer.fs51_backport or nil
-        save_dialog(digistuff_ts_export(tree, f))
+        save_dialog('Export formspec', digistuff_ts_export(tree, f))
     end
 
     render_into(element_dialog, formspec, callbacks)
