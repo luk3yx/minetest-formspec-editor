@@ -116,7 +116,7 @@ function fixers.list(elem, next_elem)
     end
 
     -- Convert the base element to a container
-    for k, v in pairs(elem) do
+    for k, _ in pairs(elem) do
         if type(k) ~= 'number' and k ~= 'x' and k ~= 'y' then
             elem[k] = nil
         end
@@ -192,10 +192,10 @@ function fs51.backport_string(formspec)
 end
 
 -- DEBUG
-if not minetest then
-    function b(fs)
-        local tree, err = formspec_ast.parse(fs)
-        if not tree then return tree, err end
-        return formspec_ast.unparse(formspec_ast.backport(tree))
-    end
-end
+-- if not minetest then
+--     function b(fs)
+--         local tree, err = formspec_ast.parse(fs)
+--         if not tree then return tree, err end
+--         return formspec_ast.unparse(formspec_ast.backport(tree))
+--     end
+-- end

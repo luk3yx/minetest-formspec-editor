@@ -301,6 +301,10 @@ function renderer.render_ast(tree, callbacks, options)
     end
 
     for _, node in ipairs(formspec_ast.flatten(tree)) do
+        if node.type == 'real_coordinates' then
+            return nil, 'Unsupported element: real_coordinates[]'
+        end
+
         -- Attempt to use a generic renderer
         local render_func = elems[node.type] or generic_render
 
