@@ -194,7 +194,7 @@ function elems.textlist(node)
         if item:sub(1, 1) ~= '#' then
             elem.textContent = item
         elseif item:sub(2, 2) == '#' then
-            elem.textContent = item:sub(2)
+            elem.textContent = item:sub(3)
         else
             elem.style.color = item:sub(1, 7)
             elem.textContent = item:sub(8)
