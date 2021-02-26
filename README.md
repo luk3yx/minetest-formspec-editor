@@ -16,6 +16,7 @@ default (dynamically loaded when required).
 ## Major features
 
  - Web-based (no waiting for MT to load)
+ - Dragghing and resizing elements.
  - Property editor
  - `${lua code}` substitution in text values.
    - Don't remove the weird comments generated when exporting these formspecs
@@ -33,7 +34,8 @@ default (dynamically loaded when required).
  - Malicious formspecs imported with the `${...}` substitution option enabled
     can freeze the webpage.
  - Element alignment might not be perfect.
- - There may be bugs in Google Chrome, I have only tested this in Firefox.
+ - I haven't tested this thoroughly in many browsers, if you find any bugs
+    please report them.
  - Texture modifiers in `image[]` will not be displayed in the preview.
 
 ## Copyright / License

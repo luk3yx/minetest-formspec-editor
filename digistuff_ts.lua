@@ -48,7 +48,7 @@ local function export(tree, backport_func)
             node.selected_id, node.selected_idx = node.selected_idx, nil
             node.choices, node.item = node.item, nil
             -- Later versions of the digustuff mod require a height field even
-            -- for formspec version 1 (breaking dropdowns on older clients).
+            -- for formspec version 1.
             node.h = node.h or 0.81
         elseif node.type == 'image_button' or
                 node.type == 'image_button_exit' then

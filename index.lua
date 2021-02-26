@@ -18,7 +18,7 @@
 --
 
 -- Load the renderer
-dofile('renderer.lua?rev=4')
+dofile('renderer.lua?rev=5')
 local formspec_escape = formspec_ast.formspec_escape
 
 local _, digistuff_ts_export = dofile('digistuff_ts.lua?rev=4')
@@ -115,6 +115,11 @@ local function draw_elements_list(selected_element)
         formspec = formspec .. '(New element)'
     end
     return formspec .. ';' .. selected .. ']'
+end
+
+local SCALE = 50
+local function round_pos(pos)
+    return math.floor(pos * 10 + 0.5) / 10
 end
 
 local function show_properties(elem, node)
@@ -345,24 +350,61 @@ local function show_properties(elem, node)
 
     properties_elem:appendChild(n)
 end
-renderer.default_callback = show_properties
+
+-- Set up drag+drop. This is mostly done in JavaScript for performance.
+function renderer.default_elem_hook(node, elem)
+    local basic_interact = js.global.basic_interact
+    if not basic_interact then return show_properties end
+
+    local draggable = node.x ~= nil and node.y ~= nil
+    local resizable = node.w ~= nil and node.h ~= nil and node.type ~= "list"
+
+    local orig_x, orig_y = node.x, node.y
+    basic_interact:add(elem, draggable, resizable, function(_, x, y, w, h)
+        local modified
+        if draggable and x then
+            node.x = round_pos(orig_x + x / SCALE)
+            node.y = round_pos(orig_y + y / SCALE)
+            modified = true
+        end
+        if resizable and w then
+            node.w = round_pos(math.max(w / SCALE, 0.1))
+            node.h = round_pos(math.max(h / SCALE, 0.1))
+            modified = true
+        end
+
+        if modified then
+            elem:setAttribute('data-formspec_ast', json.dumps(node))
+            local idx = window.Array.prototype.indexOf(
+                elem.parentNode.children, elem)
+            local base = renderer.redraw_formspec(elem.parentNode.parentNode)
+            if idx >= 0 then
+                show_properties(base.firstChild.children[idx])
+            end
+        else
+            show_properties(elem)
+        end
+    end)
+
+    return true
+end
 
 -- Templates for new elements
 do
     local templates = assert(formspec_ast.parse([[
         size[10.5,11]
         box[0,0;1,1;]
-        button[0,0;3,0.75;;]
-        button_exit[0,0;3,0.75;;]
+        button[0,0;3,0.8;;]
+        button_exit[0,0;3,0.8;;]
         checkbox[0,0.2;;;false]
-        dropdown[0,0;3,0.75;;;1]
-        field[0,0;3,0.75;;;]
+        dropdown[0,0;3,0.8;;;1]
+        field[0,0;3,0.8;;;]
         image[0,0;1,1;]
         image_button[0,0;2,2;;;;false;true;]
         image_button_exit[0,0;2,2;;;]
         label[0,0.2;]
         list[current_player;main;0,0;8,4;0]
-        pwdfield[0,0;3,0.75;;]
+        pwdfield[0,0;3,0.8;;]
         textarea[0,0;3,2;;;]
         textlist[0,0;5,3;;;1;false]
     ]]))
@@ -543,7 +585,8 @@ function renderer.show_element_dialog(base)
     end
     y = y + 0.5
     fs = fs .. 'button[0.25,' .. y .. ';5.5,0.75;grid;Toggle grid]'
-    fs = fs .. 'button[0.25,' .. y + 1 .. ';5.5,0.75;load;Load / save formspec]'
+    y = y + 1
+    fs = fs .. 'button[0.25,' .. y .. ';5.5,0.75;load;Load / save formspec]'
     function callbacks.grid()
         local raw = element_dialog_base:getAttribute('data-render-options')
         if raw == js.null then raw = '{}' end
@@ -557,8 +600,17 @@ function renderer.show_element_dialog(base)
         end
     end
     callbacks.load = show_load_save_dialog
-    y = y + 2
-    fs = 'formspec_version[2]size[6,' .. y .. ']' .. fs
+
+    if js.global.basic_interact then
+        y = y + 1
+        fs = fs .. 'button[0.25,' .. y ..
+             ';5.5,0.75;drag_drop;Disable drag+drop]'
+        function callbacks.drag_drop()
+            window.location.search = '?no-drag-drop'
+        end
+    end
+
+    fs = 'formspec_version[3]size[6,' .. y + 1 .. ']' .. fs
     element_dialog:appendChild(assert(renderer.render_formspec(fs, callbacks,
         {store_json = false})))
 end

@@ -35,6 +35,8 @@ document = window.document
 
 renderer = {}
 
+local type = type
+
 -- Render formspecs to HTML
 local elems = {}
 
@@ -241,41 +243,57 @@ function elems.dropdown(node, base, default_callbacks, scale)
     return res
 end
 
+local invisible_nodes = {style = true, position = true, anchor = true}
+local warned = {}
 local function generic_render(node)
-    window.console:warn('Formspec element type ' .. node.type ..
-        ' not implemented.')
-    if node.x and node.y then
-        return renderer.make_image('unknown_object.png')
-    else
+    local visible = not invisible_nodes[node.type]
+    if visible then
+        if not warned[node.type] then
+            warned[node.type] = true
+            window.console:warn('Formspec element type ' .. node.type ..
+                ' not implemented.')
+        end
+        if node.x and node.y then
+            return renderer.make_image('unknown_object.png')
+        end
         window.console:error('Formspec element type ' .. node.type ..
-            ' is not implemented and there is no reliable way to render it.')
-        local res = make('div')
-        res.style.display = 'none'
-        return res
+            ' is not implemented and there is no reliable way to' ..
+            ' render it.')
     end
+
+    local res = make('div')
+    res.style.display = 'none'
+    return res
 end
 
 -- Make images - This uses HDX to simplify things
 local image_baseurl = 'https://gitlab.com/VanessaE/hdx-128/raw/master/'
+local mode_cache = {}
 function renderer.make_image(name, allow_empty)
     -- Remove extension
     local real_name = name:match('^(.*)%.[^%.]+$') or ''
 
     -- Make an <img> element
     local img = document:createElement('img')
-    local mode = 'png'
+    local mode = mode_cache[name] or 'png'
     img:setAttribute('ondragstart', 'return false')
     if name == '' and allow_empty then
         img.style.opacity = '0'
         return img
+    elseif name == '' or mode == '' then
+        img.src = image_baseurl .. 'unknown_node.png'
+        return img
     end
+
     img:addEventListener('error', function()
         if mode == 'png' then
             mode = 'jpg'
+            mode_cache[name] = 'jpg'
         elseif mode == nil then
             return
         else
             mode = nil
+            mode_cache[name] = ''
             img.src = image_baseurl .. 'unknown_node.png'
             return
         end
@@ -330,11 +348,13 @@ function renderer.render_ast(tree, callbacks, options)
             if type(callbacks) == 'table' then
                 func = callbacks[node.name or '']
             elseif callbacks == nil then
-                func = renderer.default_callback
+                func = renderer.default_elem_hook(node, e)
             end
             if func then
-                e:addEventListener('click', func)
-                e.className = e.className .. ' formspec_ast-clickable'
+                if type(func) == 'function' then
+                    e:addEventListener('click', func)
+                end
+                e.classList:add('formspec_ast-clickable')
             end
             container:appendChild(e)
         end
