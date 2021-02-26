@@ -16,7 +16,7 @@ default (dynamically loaded when required).
 ## Major features
 
  - Web-based (no waiting for MT to load)
- - Dragghing and resizing elements.
+ - Dragging and resizing elements.
  - Property editor
  - `${lua code}` substitution in text values.
    - Don't remove the weird comments generated when exporting these formspecs
