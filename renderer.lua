@@ -24,7 +24,7 @@ local formspec_escape = formspec_ast.formspec_escape
 
 -- Load fs51 to allow formspec_version[1] exports
 FS51_PATH = 'fs51'
-dofile(FS51_PATH .. '/init.lua')
+dofile(FS51_PATH .. '/init.lua?rev=1')
 
 -- Load the JSON interoperability code
 dofile('json.lua')
