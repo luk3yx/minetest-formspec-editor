@@ -1,0 +1,33 @@
+image: roangzero1/factorio-mod:luarocks5.3-alpine
+
+luacheck:
+    stage: test
+    script:
+        - luacheck .
+
+pages:
+    stage: deploy
+    script:
+        - git submodule update --recursive --init
+        - mkdir public
+        - cp -r fs51 formspec_ast *.lua *.js *.html grid.png public
+        - grep -vF '/*# sourceMappingURL=style.css.map */' < style.css >
+            public/style.css
+        - rm -rf public/*/.git public/*/.github public/*/.luacheckrc
+            public/formspec_ast/*.py public/*/mod.conf public/*/.gitignore
+            public/*/depends.txt
+        - |
+            set -e
+            cd public
+            grep -oE 'https://unpkg.com/[a-z\-]+/dist/[a-z\.\-]+.js' \
+                    index.html | while read url; do
+                wget "$url"
+                wget "$url.map" || true
+            done
+        - sed -i 's|https://unpkg.com/[a-z\-]*/dist/\([a-z\.\-]*.js\)|\1|g'
+                index.html
+    artifacts:
+        paths:
+            - public
+    only:
+        - master
