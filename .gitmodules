@@ -4,3 +4,4 @@
 [submodule "fs51"]
 	path = fs51
 	url = https://gitlab.com/luk3yx/minetest-fs51.git
+	branch = main
