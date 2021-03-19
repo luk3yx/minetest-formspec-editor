@@ -487,6 +487,21 @@ function renderer.export(tree, opts)
 
     local fs, err = formspec_ast.unparse(tree)
     if not fs then return nil, err end
+
+    if opts.multiline then
+        -- Make sure escapes are properly handled
+        fs = fs:gsub('\\*%]', function(data)
+            if #data % 2 == 1 then
+                data = data .. "\n"
+            end
+            return data
+        end)
+
+        if fs:sub(-1) == "\n" then
+            fs = fs:sub(1, -2)
+        end
+    end
+
     if opts.format then
         fs = ('%q'):format(fs):gsub('\\\n', '\\n')
         local ok, msg = true, ''

@@ -18,7 +18,7 @@
 --
 
 -- Load the renderer
-dofile('renderer.lua?rev=6')
+dofile('renderer.lua?rev=7')
 local formspec_escape = formspec_ast.formspec_escape
 
 local _, digistuff_ts_export = dofile('digistuff_ts.lua?rev=4')
@@ -460,7 +460,7 @@ local load_save_opts = {}
 local function show_load_save_dialog()
     local callbacks = {}
     local formspec = [[
-        formspec_version[2]size[6,11.25]button[0,0;1,0.6;back;←]
+        formspec_version[4]size[6,12]button[0,0;1,0.6;back;←]
         label[1.25,0.3;Load / save formspec]
         checkbox[0.25,1.3;use_v1;Use formspec version 1;]] ..
             (load_save_opts.use_v1 and 'true' or 'false') .. [[]
@@ -473,10 +473,12 @@ local function show_load_save_dialog()
         label[0.75,5;expressions can be used inside]
         label[0.75,5.4;${...}. Formspec escaping is]
         label[0.75,5.8;handled automatically.]
-        button[0.25,7;5.5,1;load;Load formspec]
-        button[0.25,8.25;5.5,1;save;Save formspec]
-        box[0,9.619;6,0.02;#aaa]
-        button[0.25,10;5.5,1;digistuff_ts;WIP]] .. '\n' ..
+        checkbox[0.25,6.8;multiline;One element per line;]] ..
+            (load_save_opts.multiline and 'true' or 'false') .. [[]
+        button[0.25,7.75;5.5,1;load;Load formspec]
+        button[0.25,9;5.5,1;save;Save formspec]
+        box[0,10.369;6,0.02;#aaa]
+        button[0.25,10.75;5.5,1;digistuff_ts;WIP]] .. '\n' ..
             [[Export to digistuff touchscreen]
     ]]
     local function get_options()
