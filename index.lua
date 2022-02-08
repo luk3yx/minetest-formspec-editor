@@ -18,7 +18,7 @@
 --
 
 -- Load the renderer
-dofile('renderer.lua?rev=7')
+dofile('renderer.lua?rev=8')
 local formspec_escape = formspec_ast.formspec_escape
 
 local _, digistuff_ts_export = dofile('digistuff_ts.lua?rev=4')
@@ -397,7 +397,7 @@ do
         button[0,0;3,0.8;;]
         button_exit[0,0;3,0.8;;]
         checkbox[0,0.2;;;false]
-        dropdown[0,0;3,0.8;;;1]
+        dropdown[0,0;3,0.8;;;1;false]
         field[0,0;3,0.8;;;]
         image[0,0;1,1;]
         image_button[0,0;2,2;;;;false;true;]
