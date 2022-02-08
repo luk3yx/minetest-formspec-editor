@@ -18,7 +18,7 @@
 --
 
 -- Load the renderer
-dofile('renderer.lua?rev=8')
+dofile('renderer.lua?rev=9')
 local formspec_escape = formspec_ast.formspec_escape
 
 local _, digistuff_ts_export = dofile('digistuff_ts.lua?rev=4')

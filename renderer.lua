@@ -503,7 +503,16 @@ function renderer.export(tree, opts)
     end
 
     if opts.format then
-        fs = ('%q'):format(fs):gsub('\\\n', '\\n')
+        fs = ('%q'):format(fs)
+        if opts.multiline then
+            fs = fs:gsub('\\*%]\\\n', function(data)
+                if ((#data - 1) / 2) % 2 == 1 then
+                    data = data:sub(1, -3) .. '" ..\n"'
+                end
+                return data
+            end)
+        end
+        fs = fs:gsub('\\\n', '\\n')
         local ok, msg = true, ''
         fs = fs:gsub('${([^}]*)}', function(code)
             code = assert(deserialize('"' .. code .. '"')):gsub('\\(.)', '%1')
