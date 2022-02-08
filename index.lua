@@ -456,7 +456,7 @@ local function render_into(base, formspec, callbacks)
 end
 
 local element_dialog
-local load_save_opts = {}
+local load_save_opts = {multiline = true}
 local function show_load_save_dialog()
     local callbacks = {}
     local formspec = [[
