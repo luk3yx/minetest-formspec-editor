@@ -191,7 +191,7 @@ end
 
 function elems.textlist(node)
     local res = make('div')
-    for i, item in ipairs(node.listelem) do
+    for i, item in ipairs(node.listelems) do
         local elem = make('div')
         if item:sub(1, 1) ~= '#' then
             elem.textContent = item
@@ -223,7 +223,7 @@ function elems.dropdown(node, base, default_callbacks, scale)
         res.style.height = (2 * 15/13 * 0.35 * scale) .. 'px'
     end
     local select = make('select')
-    for i, item in ipairs(node.item) do
+    for i, item in ipairs(node.items) do
         local e = make('option', {textContent = item}, {name = i})
         if i == node.selected_idx then
             e:setAttribute('selected', 'selected')

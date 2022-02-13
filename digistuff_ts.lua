@@ -46,7 +46,7 @@ local function export(tree, backport_func)
     for _, node in ipairs(tree) do
         if node.type == 'dropdown' or node.type == 'textlist' then
             node.selected_id, node.selected_idx = node.selected_idx, nil
-            node.choices, node.item = node.item, nil
+            node.choices, node.items = node.items, nil
             -- Later versions of the digustuff mod require a height field even
             -- for formspec version 1.
             node.h = node.h or 0.81
