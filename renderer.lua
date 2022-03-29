@@ -348,7 +348,7 @@ function renderer.render_ast(tree, callbacks, options)
             if type(callbacks) == 'table' then
                 func = callbacks[node.name or '']
             elseif callbacks == nil then
-                func = renderer.default_elem_hook(node, e)
+                func = renderer.default_elem_hook(node, e, scale)
             end
             if func then
                 if type(func) == 'function' then

@@ -25,7 +25,8 @@ basic_interact.snap = () => {
     return snap;
 };
 
-basic_interact.add = (target, draggable, resizable, callback) => {
+basic_interact.add = (target, draggable, resizable, callback,
+        smallResizeMargin) => {
     let x = 0;
     let y = 0;
     target.style.touchAction = "none";
@@ -95,6 +96,7 @@ basic_interact.add = (target, draggable, resizable, callback) => {
                 // }),
                 basic_interact.snap()
             ],
+            margin: smallResizeMargin ? 10 : 20,
             invert: "reposition",
         });
 };

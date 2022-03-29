@@ -18,7 +18,7 @@
 --
 
 -- Load the renderer
-dofile('renderer.lua?rev=9')
+dofile('renderer.lua?rev=10')
 local formspec_escape = formspec_ast.formspec_escape
 
 local _, digistuff_ts_export = dofile('digistuff_ts.lua?rev=4')
@@ -351,12 +351,17 @@ local function show_properties(elem, node)
 end
 
 -- Set up drag+drop. This is mostly done in JavaScript for performance.
-function renderer.default_elem_hook(node, elem)
+function renderer.default_elem_hook(node, elem, scale)
     local basic_interact = js.global.basic_interact
     if not basic_interact then return show_properties end
 
     local draggable = node.x ~= nil and node.y ~= nil
     local resizable = node.w ~= nil and node.h ~= nil and node.type ~= "list"
+
+    local small_resize_margin = false
+    if resizable and (node.w * scale < 60 or node.h * scale < 60) then
+        small_resize_margin = true
+    end
 
     local orig_x, orig_y = node.x, node.y
     basic_interact:add(elem, draggable, resizable, function(_, x, y, w, h)
@@ -383,7 +388,7 @@ function renderer.default_elem_hook(node, elem)
         else
             show_properties(elem)
         end
-    end)
+    end, small_resize_margin)
 
     return true
 end
