@@ -267,7 +267,8 @@ local function generic_render(node)
 end
 
 -- Make images - This uses HDX to simplify things
-local image_baseurl = 'https://gitlab.com/VanessaE/hdx-128/raw/master/'
+local image_baseurl = 'https://raw.githubusercontent.com/mt-historical/' ..
+    'hdx-128/master/'
 local mode_cache = {}
 function renderer.make_image(name, allow_empty)
     -- Remove extension

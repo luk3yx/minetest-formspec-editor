@@ -9,8 +9,8 @@ Uses [Fengari](https://fengari.io/) to run my
 [fs51](https://content.minetest.net/packages/luk3yx/fs51/) mods on
 web browsers.
 
-`image[]` elements use [HDX](https://gitlab.com/VanessaE/hdx-128) textures by
-default (dynamically loaded when required).
+`image[]` elements use [HDX](https://github.com/mt-historical/hdx-128) textures
+by default (dynamically loaded when required).
 
 ## Major features
 
