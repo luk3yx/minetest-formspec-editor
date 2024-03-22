@@ -496,8 +496,7 @@ local function show_load_save_dialog()
         button[0.25,7.75;5.5,1;load;Load formspec]
         button[0.25,9;5.5,1;save;Save formspec]
         box[0,10.369;6,0.02;#aaa]
-        button[0.25,10.75;5.5,1;digistuff_ts;WIP]] .. '\n' ..
-            [[Export to digistuff touchscreen]
+        button[0.25,10.75;5.5,1;digistuff_ts;Export to digistuff touchscreen]
     ]]
     local function get_options()
         local elems = element_dialog.firstChild.firstChild.children
