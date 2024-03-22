@@ -233,9 +233,10 @@ local function show_properties(elem, node)
         formspec = formspec ..
             'button[0.25,' .. y .. ';2.7,0.75;send_to_back;Send to back]' ..
             'button[3.05,' .. y .. ';2.7,0.75;bring_to_front;Bring to front]' ..
-            'button[0.25,' .. y + 0.85 .. ';2.7,0.75;delete;Delete element]' ..
-            'button[3.05,' .. y + 0.85 .. ';2.7,0.75;reset;Reset]'
-        y = y + 1.7
+            'button[0.25,' .. y + 0.85 .. ';5.5,0.75;duplicate;Duplicate]' ..
+            'button[0.25,' .. y + 1.7 .. ';2.7,0.75;delete;Delete element]' ..
+            'button[3.05,' .. y + 1.7 .. ';2.7,0.75;reset;Reset]'
+        y = y + 2.55
     end
 
     formspec = 'formspec_version[2]size[6,' .. y + 1.25 .. ']' .. formspec ..
@@ -248,6 +249,19 @@ local function show_properties(elem, node)
         formspec = formspec .. 'Save changes'
     end
     formspec = formspec .. ']'
+
+    local counter = 0
+    function callbacks.duplicate()
+        local parent = elem.parentNode
+        elem = elem:cloneNode(true)
+        parent:appendChild(elem)
+        counter = counter + 1
+        -- Set up drag+drop
+        renderer.default_elem_hook(node, elem, SCALE)
+        properties_elem:querySelector(
+            '[data-formspec_ast-name="duplicate"]'
+        ).textContent = "Duplicated x" .. counter
+    end
 
     function callbacks.delete()
         if js.global:confirm('Are you sure?') then
